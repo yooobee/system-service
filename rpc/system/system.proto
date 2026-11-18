@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package system;
+
+// 生成user文件夹，并在该文件夹下生成 user.pb.go 和 user_grpc.pb.go
+option go_package = "./system";
+import "google/protobuf/any.proto";
+
+// 1.用户信息实体 (对应 sys_user 表)
+message UserInfoResp {
+  int64  userId = 1;  // 用户ID
+  int64  deptId = 2;  // 部门ID
+  string userName = 3;  // 用户账号
+  string nickName = 4;  // 用户昵称
+  string userType = 5;  // 用户类型（00系统用户）
+  string email = 6;  // 用户邮箱
+  string phoneNumber = 7;  // 手机号码
+  string sex = 8;  // 用户性别（0男 1女 2未知）
+  string avatar = 9;  // 头像地址
+  string status = 10; // 帐号状态（0正常 1停用）
+  string delFlag = 11; // 删除标志（0代表存在 2代表删除）
+  string loginIp = 12; // 最后登录IP
+  string loginDate = 13; // 最后登录时间 (格式: 2006-01-02 15:04:05)
+  string createTime = 14; // 创建时间
+  string updateTime = 15; // 更新时间
+  string createBy = 16; // 创建者
+  string updateBy = 17; // 更新者
+  string remark = 18; // 备注
+  // 注意：password 通常不在响应中返回，为了安全起见这里省略
+}
+// 2.新增用户
+message CreateUserResp {
+  int64 userId = 1; // 新创建用户的唯一标识
+}
+
+// 3.新增用户
+message CreateUserReq {
+  int64  deptId = 1;
+  string userName = 2;
+  string nickName = 3;
+  string userType = 4;
+  string email = 5;
+  string phoneNumber = 6;
+  string sex = 7;
+  optional string avatar = 8;
+  string password = 9; // 创建时需要密码
+  string status = 10;
+  string remark = 11;
+}
+
+// 4.批量删除
+message BatchDeleteUserReq {
+  repeated int64 userIds = 1;  // 批量删除的用户ID列表
+}
+// 5.返回值
+message BatchDeleteUserResp {}
+
+// 6. 修改用户
+message UpdateUserReq {
+  int64  userId = 1;  // 用户ID
+  int64  deptId = 2;  // 部门ID
+  string nickName = 3;  // 用户昵称
+  string userType = 4;  // 用户类型（00系统用户）
+  string email = 5;  // 用户邮箱
+  string phoneNumber = 6;  // 手机号码
+  string sex = 7;  // 用户性别（0男 1女 2未知）
+  repeated int64 roles = 8; //角色
+  string avatar = 9;  // 头像地址
+  string status = 10; // 帐号状态（0正常 1停用）
+  string delFlag = 11; // 删除标志（0代表存在 2代表删除）
+  string updateTime = 12; // 更新时间
+  string updateBy = 13; // 更新者
+  string remark = 14; // 标记
+  // 注意：更新通常不包含密码，改密码应有独立接口；也不包含 userName (账号通常不可改)
+}
+message UpdateUserResp {}
+// --- 根据ID查询 (Get) ---
+message GetUserReq {
+  int64 userId = 1;
+}
+
+// --- 查询列表 (List) ---
+message ListUserReq {
+  int64 pageNum = 1; // 页码，默认1
+  int64 pageSize = 2; // 每页数量，默认10
+  string userName = 3; // 可选：按账号模糊搜索
+  string status = 4; // 可选：按状态筛选
+  int64 deptId = 5; // 可选：按部门筛选
+}
+
+message ListUserResp {
+  repeated UserInfoResp users = 1;
+  int64 total = 2; // 总记录数
+}
+
+// =======================
+// 2. 服务定义 (Service)
+// =======================
+
+service UserService {
+  // 1. 新增用户
+  rpc CreateUser(CreateUserReq) returns (CreateUserResp);
+
+  // 2. 删除用户 (逻辑删除)
+  rpc DeleteUser(BatchDeleteUserReq) returns (BatchDeleteUserResp);
+
+  // 3. 修改用户
+  rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp);
+
+  // 4. 根据ID查询用户
+  rpc GetUser(GetUserReq) returns (UserInfoResp);
+
+  // 5. 查询用户列表 (分页)
+  rpc ListUser(ListUserReq) returns (ListUserResp);
+}

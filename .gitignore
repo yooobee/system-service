@@ -1,0 +1,18 @@
+# IDE
+.idea/
+
+# 运行日志
+logs/
+*.log
+*.log.gz
+
+# 编译产物
+*.exe
+*.out
+system-service
+
+# 系统文件
+.DS_Store
+
+# 本地配置（含数据库密码等敏感信息，建议另存 example 文件）
+etc/system.yaml
