@@ -16,5 +16,4 @@ goctl model mysql ddl -src ./model/UserInfo.sql -dir ./model --style=goZero
 ```
 ### 3. token
 ```text
-  <YOUR_GITHUB_TOKEN>
 ```
