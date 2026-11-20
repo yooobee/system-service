@@ -120,9 +120,25 @@ func buildUpdateUser(in *system.UpdateUserReq) ([]string, []interface{}, error) 
 		setClauses = append(setClauses, "sex=?")
 		args = append(args, in.Sex)
 	}
+	if in.Avatar != "" {
+		setClauses = append(setClauses, "avatar=?")
+		args = append(args, in.Avatar)
+	}
 	if in.Status != "" {
 		setClauses = append(setClauses, "status=?")
 		args = append(args, in.Status)
+	}
+	if in.DelFlag != "" {
+		setClauses = append(setClauses, "del_flag=?")
+		args = append(args, in.DelFlag)
+	}
+	if in.LoginIp != "" {
+		setClauses = append(setClauses, "login_ip=?")
+		args = append(args, in.LoginIp)
+	}
+	if in.UpdateBy != "" {
+		setClauses = append(setClauses, "update_by=?")
+		args = append(args, in.UpdateBy)
 	}
 	if len(setClauses) == 0 {
 		return nil, nil, status.Error(codes.InvalidArgument, "没有需要更新的字段")

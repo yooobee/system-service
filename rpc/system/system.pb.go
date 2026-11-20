@@ -460,18 +460,23 @@ type UpdateUserReq struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=userId,proto3" json:"userId,omitempty"`          // 用户ID
 	DeptId        int64                  `protobuf:"varint,2,opt,name=deptId,proto3" json:"deptId,omitempty"`          // 部门ID
-	NickName      string                 `protobuf:"bytes,3,opt,name=nickName,proto3" json:"nickName,omitempty"`       // 用户昵称
-	UserType      string                 `protobuf:"bytes,4,opt,name=userType,proto3" json:"userType,omitempty"`       // 用户类型（00系统用户）
-	Email         string                 `protobuf:"bytes,5,opt,name=email,proto3" json:"email,omitempty"`             // 用户邮箱
-	PhoneNumber   string                 `protobuf:"bytes,6,opt,name=phoneNumber,proto3" json:"phoneNumber,omitempty"` // 手机号码
-	Sex           string                 `protobuf:"bytes,7,opt,name=sex,proto3" json:"sex,omitempty"`                 // 用户性别（0男 1女 2未知）
-	Roles         []int64                `protobuf:"varint,8,rep,packed,name=roles,proto3" json:"roles,omitempty"`     //角色
-	Avatar        string                 `protobuf:"bytes,9,opt,name=avatar,proto3" json:"avatar,omitempty"`           // 头像地址
-	Status        string                 `protobuf:"bytes,10,opt,name=status,proto3" json:"status,omitempty"`          // 帐号状态（0正常 1停用）
-	DelFlag       string                 `protobuf:"bytes,11,opt,name=delFlag,proto3" json:"delFlag,omitempty"`        // 删除标志（0代表存在 2代表删除）
-	UpdateTime    string                 `protobuf:"bytes,12,opt,name=updateTime,proto3" json:"updateTime,omitempty"`  // 更新时间
-	UpdateBy      string                 `protobuf:"bytes,13,opt,name=updateBy,proto3" json:"updateBy,omitempty"`      // 更新者
-	Remark        string                 `protobuf:"bytes,14,opt,name=remark,proto3" json:"remark,omitempty"`          // 标记
+	UserName      string                 `protobuf:"bytes,3,opt,name=userName,proto3" json:"userName,omitempty"`       // 用户账号
+	NickName      string                 `protobuf:"bytes,4,opt,name=nickName,proto3" json:"nickName,omitempty"`       // 用户昵称
+	UserType      string                 `protobuf:"bytes,5,opt,name=userType,proto3" json:"userType,omitempty"`       // 用户类型（00系统用户）
+	Email         string                 `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`             // 用户邮箱
+	PhoneNumber   string                 `protobuf:"bytes,7,opt,name=phoneNumber,proto3" json:"phoneNumber,omitempty"` // 手机号码
+	Sex           string                 `protobuf:"bytes,8,opt,name=sex,proto3" json:"sex,omitempty"`                 // 用户性别（0男 1女 2未知）
+	Roles         []int64                `protobuf:"varint,9,rep,packed,name=roles,proto3" json:"roles,omitempty"`     //角色
+	Avatar        string                 `protobuf:"bytes,10,opt,name=avatar,proto3" json:"avatar,omitempty"`          // 头像地址
+	Status        string                 `protobuf:"bytes,11,opt,name=status,proto3" json:"status,omitempty"`          // 帐号状态（0正常 1停用）
+	DelFlag       string                 `protobuf:"bytes,12,opt,name=delFlag,proto3" json:"delFlag,omitempty"`        // 删除标志（0代表存在 2代表删除）
+	LoginIp       string                 `protobuf:"bytes,13,opt,name=loginIp,proto3" json:"loginIp,omitempty"`        // 最后登录IP
+	LoginDate     string                 `protobuf:"bytes,14,opt,name=loginDate,proto3" json:"loginDate,omitempty"`    // 最后登录时间 (格式: 2006-01-02 15:04:05)
+	CreateTime    string                 `protobuf:"bytes,15,opt,name=createTime,proto3" json:"createTime,omitempty"`  // 创建时间
+	UpdateTime    string                 `protobuf:"bytes,16,opt,name=updateTime,proto3" json:"updateTime,omitempty"`  // 更新时间
+	CreateBy      string                 `protobuf:"bytes,17,opt,name=createBy,proto3" json:"createBy,omitempty"`      // 创建者
+	UpdateBy      string                 `protobuf:"bytes,18,opt,name=updateBy,proto3" json:"updateBy,omitempty"`      // 更新者
+	Remark        string                 `protobuf:"bytes,19,opt,name=remark,proto3" json:"remark,omitempty"`          // 备注
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -518,6 +523,13 @@ func (x *UpdateUserReq) GetDeptId() int64 {
 		return x.DeptId
 	}
 	return 0
+}
+
+func (x *UpdateUserReq) GetUserName() string {
+	if x != nil {
+		return x.UserName
+	}
+	return ""
 }
 
 func (x *UpdateUserReq) GetNickName() string {
@@ -583,9 +595,37 @@ func (x *UpdateUserReq) GetDelFlag() string {
 	return ""
 }
 
+func (x *UpdateUserReq) GetLoginIp() string {
+	if x != nil {
+		return x.LoginIp
+	}
+	return ""
+}
+
+func (x *UpdateUserReq) GetLoginDate() string {
+	if x != nil {
+		return x.LoginDate
+	}
+	return ""
+}
+
+func (x *UpdateUserReq) GetCreateTime() string {
+	if x != nil {
+		return x.CreateTime
+	}
+	return ""
+}
+
 func (x *UpdateUserReq) GetUpdateTime() string {
 	if x != nil {
 		return x.UpdateTime
+	}
+	return ""
+}
+
+func (x *UpdateUserReq) GetCreateBy() string {
+	if x != nil {
+		return x.CreateBy
 	}
 	return ""
 }
@@ -861,25 +901,32 @@ const file_rpc_system_system_proto_rawDesc = "" +
 	"\a_avatar\".\n" +
 	"\x12BatchDeleteUserReq\x12\x18\n" +
 	"\auserIds\x18\x01 \x03(\x03R\auserIds\"\x15\n" +
-	"\x13BatchDeleteUserResp\"\xf5\x02\n" +
+	"\x13BatchDeleteUserResp\"\x85\x04\n" +
 	"\rUpdateUserReq\x12\x16\n" +
 	"\x06userId\x18\x01 \x01(\x03R\x06userId\x12\x16\n" +
 	"\x06deptId\x18\x02 \x01(\x03R\x06deptId\x12\x1a\n" +
-	"\bnickName\x18\x03 \x01(\tR\bnickName\x12\x1a\n" +
-	"\buserType\x18\x04 \x01(\tR\buserType\x12\x14\n" +
-	"\x05email\x18\x05 \x01(\tR\x05email\x12 \n" +
-	"\vphoneNumber\x18\x06 \x01(\tR\vphoneNumber\x12\x10\n" +
-	"\x03sex\x18\a \x01(\tR\x03sex\x12\x14\n" +
-	"\x05roles\x18\b \x03(\x03R\x05roles\x12\x16\n" +
-	"\x06avatar\x18\t \x01(\tR\x06avatar\x12\x16\n" +
-	"\x06status\x18\n" +
-	" \x01(\tR\x06status\x12\x18\n" +
-	"\adelFlag\x18\v \x01(\tR\adelFlag\x12\x1e\n" +
+	"\buserName\x18\x03 \x01(\tR\buserName\x12\x1a\n" +
+	"\bnickName\x18\x04 \x01(\tR\bnickName\x12\x1a\n" +
+	"\buserType\x18\x05 \x01(\tR\buserType\x12\x14\n" +
+	"\x05email\x18\x06 \x01(\tR\x05email\x12 \n" +
+	"\vphoneNumber\x18\a \x01(\tR\vphoneNumber\x12\x10\n" +
+	"\x03sex\x18\b \x01(\tR\x03sex\x12\x14\n" +
+	"\x05roles\x18\t \x03(\x03R\x05roles\x12\x16\n" +
+	"\x06avatar\x18\n" +
+	" \x01(\tR\x06avatar\x12\x16\n" +
+	"\x06status\x18\v \x01(\tR\x06status\x12\x18\n" +
+	"\adelFlag\x18\f \x01(\tR\adelFlag\x12\x18\n" +
+	"\aloginIp\x18\r \x01(\tR\aloginIp\x12\x1c\n" +
+	"\tloginDate\x18\x0e \x01(\tR\tloginDate\x12\x1e\n" +
 	"\n" +
-	"updateTime\x18\f \x01(\tR\n" +
+	"createTime\x18\x0f \x01(\tR\n" +
+	"createTime\x12\x1e\n" +
+	"\n" +
+	"updateTime\x18\x10 \x01(\tR\n" +
 	"updateTime\x12\x1a\n" +
-	"\bupdateBy\x18\r \x01(\tR\bupdateBy\x12\x16\n" +
-	"\x06remark\x18\x0e \x01(\tR\x06remark\"\x10\n" +
+	"\bcreateBy\x18\x11 \x01(\tR\bcreateBy\x12\x1a\n" +
+	"\bupdateBy\x18\x12 \x01(\tR\bupdateBy\x12\x16\n" +
+	"\x06remark\x18\x13 \x01(\tR\x06remark\"\x10\n" +
 	"\x0eUpdateUserResp\"$\n" +
 	"\n" +
 	"GetUserReq\x12\x16\n" +

@@ -59,18 +59,23 @@ message BatchDeleteUserResp {}
 message UpdateUserReq {
   int64  userId = 1;  // 用户ID
   int64  deptId = 2;  // 部门ID
-  string nickName = 3;  // 用户昵称
-  string userType = 4;  // 用户类型（00系统用户）
-  string email = 5;  // 用户邮箱
-  string phoneNumber = 6;  // 手机号码
-  string sex = 7;  // 用户性别（0男 1女 2未知）
-  repeated int64 roles = 8; //角色
-  string avatar = 9;  // 头像地址
-  string status = 10; // 帐号状态（0正常 1停用）
-  string delFlag = 11; // 删除标志（0代表存在 2代表删除）
-  string updateTime = 12; // 更新时间
-  string updateBy = 13; // 更新者
-  string remark = 14; // 标记
+  string userName = 3;  // 用户账号
+  string nickName = 4;  // 用户昵称
+  string userType = 5;  // 用户类型（00系统用户）
+  string email = 6;  // 用户邮箱
+  string phoneNumber = 7;  // 手机号码
+  string sex = 8;  // 用户性别（0男 1女 2未知）
+  repeated int64 roles = 9; //角色
+  string avatar = 10;  // 头像地址
+  string status = 11; // 帐号状态（0正常 1停用）
+  string delFlag = 12; // 删除标志（0代表存在 2代表删除）
+  string loginIp = 13; // 最后登录IP
+  string loginDate = 14; // 最后登录时间 (格式: 2006-01-02 15:04:05)
+  string createTime = 15; // 创建时间
+  string updateTime = 16; // 更新时间
+  string createBy = 17; // 创建者
+  string updateBy = 18; // 更新者
+  string remark = 19; // 备注
   // 注意：更新通常不包含密码，改密码应有独立接口；也不包含 userName (账号通常不可改)
 }
 message UpdateUserResp {}
