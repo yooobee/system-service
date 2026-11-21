@@ -34,7 +34,7 @@ func (l *UpdateUserLogic) UpdateUser(in *system.UpdateUserReq) (*system.UpdateUs
 	l.Logger.Infof("更新用户信息前信息，User: %v", in)
 	if in.UserId <= 0 {
 		l.Logger.Errorf("更新用户失败：用户ID为空")
-		return nil, status.Error(codes.InvalidArgument, "用户ID不能为空")
+		return nil, status.Errorf(codes.InvalidArgument, "用户ID不能为空: %v", in.UserId)
 	}
 	// 构建set子句
 	setClauses, baseArgs, err := buildUpdateUser(in)
@@ -47,10 +47,21 @@ func (l *UpdateUserLogic) UpdateUser(in *system.UpdateUserReq) (*system.UpdateUs
 	err = l.svcCtx.DB.TransactCtx(l.ctx, func(ctx context.Context, session sqlx.Session) error {
 		updateQuery := "UPDATE user_info SET " + strings.Join(setClauses, ", ") + " WHERE user_id = ?"
 		args := append(baseArgs, in.UserId)
-		if _, err := session.ExecCtx(ctx, updateQuery, args...); err != nil {
+		res, err := session.ExecCtx(ctx, updateQuery, args...)
+		if err != nil {
 			// 详细错误只记录在服务端日志，避免泄露给调用方
 			logx.WithContext(ctx).Errorf("更新用户失败，userId: %v, err: %v", in.UserId, err)
+			return status.Errorf(codes.Internal, "更新用户失败: %v", err)
+		}
+
+		affected, err := res.RowsAffected()
+		if err != nil {
+			logx.WithContext(ctx).Errorf("获取影响行数失败，userId: %v, err: %v", in.UserId, err)
 			return status.Error(codes.Internal, "更新用户失败")
+		}
+		if affected == 0 {
+			logx.WithContext(ctx).Errorf("更新用户失败，用户不存在，userId: %v", in.UserId)
+			return status.Error(codes.NotFound, "用户不存在")
 		}
 		// 2. 更新角色（如果有）
 		if len(in.Roles) > 0 {
