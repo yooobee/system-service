@@ -1,4 +1,4 @@
-package logic
+package userservicelogic
 
 import (
 	"context"
@@ -30,7 +30,6 @@ func NewDeleteUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Delete
 
 // DeleteUser 2. 删除用户 (逻辑删除)
 func (l *DeleteUserLogic) DeleteUser(in *system.BatchDeleteUserReq) (*system.BatchDeleteUserResp, error) {
-	// todo: add your logic here and delete this line
 	ids := in.UserIds
 	if len(ids) == 0 {
 		return nil, status.Error(codes.Internal, "删除用户失败")

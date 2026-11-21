@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "./system";
+
+// =======================
+// 部门信息 (对应 sys_dept 表)
+// =======================
+message DeptInfoResp {
+  int64  deptId     = 1;  // 部门ID
+  int64  parentId   = 2;  // 父部门ID
+  string ancestors  = 3;  // 祖级列表，如 "0,100,101"
+  string deptName   = 4;  // 部门名称
+  int32  orderNum   = 5;  // 显示顺序
+  string leader     = 6;  // 负责人
+  string phone      = 7;  // 联系电话
+  string email      = 8;  // 邮箱
+  string status     = 9;  // 状态（0正常 1停用）
+  string delFlag    = 10; // 删除标志（0存在 2删除）
+  string createBy   = 11; // 创建者
+  string createTime = 12; // 创建时间
+  string updateBy   = 13; // 更新者
+  string updateTime = 14; // 更新时间
+}
+
+// --- 新增部门 ---
+message CreateDeptReq {
+  int64  parentId = 1;
+  string deptName = 2;
+  int32  orderNum = 3;
+  string leader   = 4;
+  string phone    = 5;
+  string email    = 6;
+  string status   = 7;
+}
+message CreateDeptResp {
+  int64 deptId = 1; // 新创建部门的唯一标识
+}
+
+// --- 批量删除部门 (逻辑删除) ---
+message BatchDeleteDeptReq {
+  repeated int64 deptIds = 1;
+}
+message BatchDeleteDeptResp {}
+
+// --- 修改部门 ---
+message UpdateDeptReq {
+  int64  deptId   = 1;
+  int64  parentId = 2;
+  string deptName = 3;
+  int32  orderNum = 4;
+  string leader   = 5;
+  string phone    = 6;
+  string email    = 7;
+  string status   = 8;
+}
+message UpdateDeptResp {}
+
+// --- 根据ID查询部门 ---
+message GetDeptReq {
+  int64 deptId = 1;
+}
+
+// --- 查询部门列表 ---
+message ListDeptReq {
+  string deptName = 1; // 可选：名称模糊搜索
+  string status   = 2; // 可选：状态筛选
+}
+message ListDeptResp {
+  repeated DeptInfoResp depts = 1;
+}
+
+service DeptService {
+  // 1. 新增部门
+  rpc CreateDept(CreateDeptReq) returns (CreateDeptResp);
+
+  // 2. 批量删除部门 (逻辑删除)
+  rpc DeleteDept(BatchDeleteDeptReq) returns (BatchDeleteDeptResp);
+
+  // 3. 修改部门
+  rpc UpdateDept(UpdateDeptReq) returns (UpdateDeptResp);
+
+  // 4. 根据ID查询部门
+  rpc GetDept(GetDeptReq) returns (DeptInfoResp);
+
+  // 5. 查询部门列表
+  rpc ListDept(ListDeptReq) returns (ListDeptResp);
+}

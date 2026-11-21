@@ -7,7 +7,7 @@ package server
 import (
 	"context"
 
-	"system-service/internal/logic"
+	"system-service/internal/logic/userservice"
 	"system-service/internal/svc"
 	"system-service/rpc/system"
 )
@@ -25,30 +25,30 @@ func NewUserServiceServer(svcCtx *svc.ServiceContext) *UserServiceServer {
 
 // 1. 新增用户
 func (s *UserServiceServer) CreateUser(ctx context.Context, in *system.CreateUserReq) (*system.CreateUserResp, error) {
-	l := logic.NewCreateUserLogic(ctx, s.svcCtx)
+	l := userservicelogic.NewCreateUserLogic(ctx, s.svcCtx)
 	return l.CreateUser(in)
 }
 
 // 2. 删除用户 (逻辑删除)
 func (s *UserServiceServer) DeleteUser(ctx context.Context, in *system.BatchDeleteUserReq) (*system.BatchDeleteUserResp, error) {
-	l := logic.NewDeleteUserLogic(ctx, s.svcCtx)
+	l := userservicelogic.NewDeleteUserLogic(ctx, s.svcCtx)
 	return l.DeleteUser(in)
 }
 
 // 3. 修改用户
 func (s *UserServiceServer) UpdateUser(ctx context.Context, in *system.UpdateUserReq) (*system.UpdateUserResp, error) {
-	l := logic.NewUpdateUserLogic(ctx, s.svcCtx)
+	l := userservicelogic.NewUpdateUserLogic(ctx, s.svcCtx)
 	return l.UpdateUser(in)
 }
 
 // 4. 根据ID查询用户
 func (s *UserServiceServer) GetUser(ctx context.Context, in *system.GetUserReq) (*system.UserInfoResp, error) {
-	l := logic.NewGetUserLogic(ctx, s.svcCtx)
+	l := userservicelogic.NewGetUserLogic(ctx, s.svcCtx)
 	return l.GetUser(in)
 }
 
 // 5. 查询用户列表 (分页)
 func (s *UserServiceServer) ListUser(ctx context.Context, in *system.ListUserReq) (*system.ListUserResp, error) {
-	l := logic.NewListUserLogic(ctx, s.svcCtx)
+	l := userservicelogic.NewListUserLogic(ctx, s.svcCtx)
 	return l.ListUser(in)
 }

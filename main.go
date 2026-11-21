@@ -3,9 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	configserviceServer "system-service/internal/server/configservice"
 
 	"system-service/internal/config"
-	"system-service/internal/server"
+	deptserver "system-service/internal/server/deptservice"
+	menuserver "system-service/internal/server/menuservice"
+	roleserver "system-service/internal/server/roleservice"
+	userserver "system-service/internal/server/userservice"
 	"system-service/internal/svc"
 	"system-service/rpc/system"
 
@@ -26,7 +30,12 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 
 	s := zrpc.MustNewServer(c.RpcServerConf, func(grpcServer *grpc.Server) {
-		system.RegisterUserServiceServer(grpcServer, server.NewUserServiceServer(ctx))
+		// 一个 system 微服务，注册四个业务服务
+		system.RegisterUserServiceServer(grpcServer, userserver.NewUserServiceServer(ctx))
+		system.RegisterRoleServiceServer(grpcServer, roleserver.NewRoleServiceServer(ctx))
+		system.RegisterDeptServiceServer(grpcServer, deptserver.NewDeptServiceServer(ctx))
+		system.RegisterMenuServiceServer(grpcServer, menuserver.NewMenuServiceServer(ctx))
+		system.RegisterConfigServiceServer(grpcServer, configserviceServer.NewConfigServiceServer(ctx))
 
 		if c.Mode == service.DevMode || c.Mode == service.TestMode {
 			reflection.Register(grpcServer)

@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "./system";
+
+// =======================
+// 菜单信息 (对应 sys_menu 表)
+// =======================
+message MenuInfoResp {
+  int64  menuId     = 1;  // 菜单ID
+  string menuName   = 2;  // 菜单名称
+  int64  parentId   = 3;  // 父菜单ID
+  int32  orderNum   = 4;  // 显示顺序
+  string path       = 5;  // 路由地址
+  string component  = 6;  // 组件路径
+  string query      = 7;  // 路由参数
+  string routeName  = 8;  // 路由名称
+  string isFrame    = 9;  // 是否外链（0是 1否）
+  string isCache    = 10; // 是否缓存（0缓存 1不缓存）
+  string menuType   = 11; // 菜单类型（M目录 C菜单 F按钮）
+  string visible    = 12; // 显示状态（0显示 1隐藏）
+  string status     = 13; // 菜单状态（0正常 1停用）
+  string perms      = 14; // 权限标识
+  string icon       = 15; // 菜单图标
+  string createBy   = 16; // 创建者
+  string createTime = 17; // 创建时间
+  string updateBy   = 18; // 更新者
+  string updateTime = 19; // 更新时间
+  string remark     = 20; // 备注
+}
+
+// --- 新增菜单 ---
+message CreateMenuReq {
+  string menuName  = 1;
+  int64  parentId  = 2;
+  int32  orderNum  = 3;
+  string path      = 4;
+  string component = 5;
+  string query     = 6;
+  string routeName = 7;
+  string isFrame   = 8;
+  string isCache   = 9;
+  string menuType  = 10;
+  string visible   = 11;
+  string status    = 12;
+  string perms     = 13;
+  string icon      = 14;
+}
+message CreateMenuResp {
+  int64 menuId = 1; // 新创建菜单的唯一标识
+}
+
+// --- 批量删除菜单 (逻辑删除) ---
+message BatchDeleteMenuReq {
+  repeated int64 menuIds = 1;
+}
+message BatchDeleteMenuResp {}
+
+// --- 修改菜单 ---
+message UpdateMenuReq {
+  int64  menuId    = 1;
+  string menuName  = 2;
+  int64  parentId  = 3;
+  int32  orderNum  = 4;
+  string path      = 5;
+  string component = 6;
+  string query     = 7;
+  string routeName = 8;
+  string isFrame   = 9;
+  string isCache   = 10;
+  string menuType  = 11;
+  string visible   = 12;
+  string status    = 13;
+  string perms     = 14;
+  string icon      = 15;
+}
+message UpdateMenuResp {}
+
+// --- 根据ID查询菜单 ---
+message GetMenuReq {
+  int64 menuId = 1;
+}
+
+// --- 查询菜单列表 ---
+message ListMenuReq {
+  string menuName = 1; // 可选：名称模糊搜索
+  string status   = 2; // 可选：状态筛选
+}
+message ListMenuResp {
+  repeated MenuInfoResp menus = 1;
+}
+
+service MenuService {
+  // 1. 新增菜单
+  rpc CreateMenu(CreateMenuReq) returns (CreateMenuResp);
+
+  // 2. 批量删除菜单 (逻辑删除)
+  rpc DeleteMenu(BatchDeleteMenuReq) returns (BatchDeleteMenuResp);
+
+  // 3. 修改菜单
+  rpc UpdateMenu(UpdateMenuReq) returns (UpdateMenuResp);
+
+  // 4. 根据ID查询菜单
+  rpc GetMenu(GetMenuReq) returns (MenuInfoResp);
+
+  // 5. 查询菜单列表
+  rpc ListMenu(ListMenuReq) returns (ListMenuResp);
+}

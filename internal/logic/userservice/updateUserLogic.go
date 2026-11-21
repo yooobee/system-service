@@ -1,4 +1,4 @@
-package logic
+package userservicelogic
 
 import (
 	"context"
@@ -104,6 +104,7 @@ func updateUserRolesInTx(ctx context.Context, session sqlx.Session, userId int64
 	}
 	return nil
 }
+
 func buildUpdateUser(in *system.UpdateUserReq) ([]string, []interface{}, error) {
 	var setClauses []string
 	var args []interface{}

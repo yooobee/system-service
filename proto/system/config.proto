@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "./system";
+
+// =======================
+// 参数配置 (对应 sys_config 表)
+// =======================
+message ConfigInfoResp {
+  int64  configId    = 1;  // 参数主键
+  string configName  = 2;  // 参数名称
+  string configKey   = 3;  // 参数键名
+  string configValue = 4;  // 参数键值
+  string configType  = 5;  // 系统内置（Y是 N否）
+  string createBy    = 6;  // 创建者
+  string createTime  = 7;  // 创建时间
+  string updateBy    = 8;  // 更新者
+  string updateTime  = 9;  // 更新时间
+  string remark      = 10; // 备注
+}
+
+// --- 新增参数 ---
+message CreateConfigReq {
+  string configName  = 1;
+  string configKey   = 2;
+  string configValue = 3;
+  string configType  = 4;
+  string remark      = 5;
+}
+message CreateConfigResp {
+  int64 configId = 1; // 新创建参数的唯一标识
+}
+
+// --- 批量删除参数 ---
+message BatchDeleteConfigReq {
+  repeated int64 configIds = 1; // 批量删除的参数ID列表
+}
+message BatchDeleteConfigResp {}
+
+// --- 修改参数 ---
+message UpdateConfigReq {
+  int64  configId    = 1;
+  string configName  = 2;
+  string configKey   = 3;
+  string configValue = 4;
+  string configType  = 5;
+  string remark      = 6;
+}
+message UpdateConfigResp {}
+
+// --- 根据ID查询参数 ---
+message GetConfigReq {
+  int64 configId = 1;
+}
+
+// --- 查询参数列表 (分页) ---
+message ListConfigReq {
+  int64  pageNum     = 1; // 页码，默认1
+  int64  pageSize    = 2; // 每页数量，默认10
+  string configName  = 3; // 可选：按参数名称模糊搜索
+  string configKey   = 4; // 可选：按参数键名模糊搜索
+  string configType  = 5; // 可选：按系统内置筛选
+}
+message ListConfigResp {
+  repeated ConfigInfoResp configs = 1;
+  int64 total = 2; // 总记录数
+}
+
+service ConfigService {
+  // 1. 新增参数
+  rpc CreateConfig(CreateConfigReq) returns (CreateConfigResp);
+
+  // 2. 批量删除参数
+  rpc DeleteConfig(BatchDeleteConfigReq) returns (BatchDeleteConfigResp);
+
+  // 3. 修改参数
+  rpc UpdateConfig(UpdateConfigReq) returns (UpdateConfigResp);
+
+  // 4. 根据ID查询参数
+  rpc GetConfig(GetConfigReq) returns (ConfigInfoResp);
+
+  // 5. 查询参数列表 (分页)
+  rpc ListConfig(ListConfigReq) returns (ListConfigResp);
+}

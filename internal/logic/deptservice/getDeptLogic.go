@@ -1,4 +1,4 @@
-package logic
+package deptservicelogic
 
 import (
 	"context"
@@ -9,23 +9,23 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ListUserLogic struct {
+type GetDeptLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewListUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ListUserLogic {
-	return &ListUserLogic{
+func NewGetDeptLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDeptLogic {
+	return &GetDeptLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-// 5. 查询用户列表 (分页)
-func (l *ListUserLogic) ListUser(in *system.ListUserReq) (*system.ListUserResp, error) {
+// GetDept 4. 根据ID查询部门
+func (l *GetDeptLogic) GetDept(in *system.GetDeptReq) (*system.DeptInfoResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &system.ListUserResp{}, nil
+	return &system.DeptInfoResp{}, nil
 }

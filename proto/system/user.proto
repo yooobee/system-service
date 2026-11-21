@@ -2,9 +2,7 @@ syntax = "proto3";
 
 package system;
 
-// 生成user文件夹，并在该文件夹下生成 user.pb.go 和 user_grpc.pb.go
 option go_package = "./system";
-import "google/protobuf/any.proto";
 
 // 1.用户信息实体 (对应 sys_user 表)
 message UserInfoResp {
@@ -28,6 +26,7 @@ message UserInfoResp {
   string remark = 18; // 备注
   // 注意：password 通常不在响应中返回，为了安全起见这里省略
 }
+
 // 2.新增用户
 message CreateUserResp {
   int64 userId = 1; // 新创建用户的唯一标识
@@ -79,6 +78,7 @@ message UpdateUserReq {
   // 注意：更新通常不包含密码，改密码应有独立接口；也不包含 userName (账号通常不可改)
 }
 message UpdateUserResp {}
+
 // --- 根据ID查询 (Get) ---
 message GetUserReq {
   int64 userId = 1;
@@ -97,10 +97,6 @@ message ListUserResp {
   repeated UserInfoResp users = 1;
   int64 total = 2; // 总记录数
 }
-
-// =======================
-// 2. 服务定义 (Service)
-// =======================
 
 service UserService {
   // 1. 新增用户

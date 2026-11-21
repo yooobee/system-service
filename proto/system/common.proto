@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "./system";
+
+// 通用分页请求
+message PageReq {
+  int64 pageNum  = 1; // 页码，默认 1
+  int64 pageSize = 2; // 每页数量，默认 10
+}
+
+// 通用分页响应
+message PageResp {
+  int64 total    = 1; // 总记录数
+  int64 pageNum  = 2;
+  int64 pageSize = 3;
+}
+
+// 通用空响应
+message Empty {}

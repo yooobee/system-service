@@ -1,4 +1,4 @@
-package logic
+package userservicelogic
 
 import (
 	"context"
@@ -56,10 +56,6 @@ func (l *CreateUserLogic) CreateUser(in *system.CreateUserReq) (*system.CreateUs
 	_, err = result.LastInsertId()
 	if err != nil {
 		logx.Errorf("获取自增ID失败：%v", err)
-		return nil, status.Error(codes.Internal, "新增用户失败")
-	}
-	if err != nil {
-		logx.Errorf("封装返回数据失败：%v", err)
 		return nil, status.Error(codes.Internal, "新增用户失败")
 	}
 	return &system.CreateUserResp{}, nil

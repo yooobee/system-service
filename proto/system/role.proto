@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package system;
+
+option go_package = "./system";
+
+// =======================
+// 角色信息 (对应 sys_role 表)
+// =======================
+message RoleInfoResp {
+  int64  roleId            = 1;  // 角色ID
+  string roleName          = 2;  // 角色名称
+  string roleKey           = 3;  // 角色权限字符串
+  int32  roleSort          = 4;  // 显示顺序
+  string dataScope         = 5;  // 数据范围（1全部 2自定义 3本部门 4本部门及以下 5仅本人）
+  bool   menuCheckStrictly = 6;  // 菜单树选择项是否关联显示
+  bool   deptCheckStrictly = 7;  // 部门树选择项是否关联显示
+  string status            = 8;  // 角色状态（0正常 1停用）
+  string delFlag           = 9;  // 删除标志（0存在 2删除）
+  string createBy          = 10; // 创建者
+  string createTime        = 11; // 创建时间
+  string updateBy          = 12; // 更新者
+  string updateTime        = 13; // 更新时间
+  string remark            = 14; // 备注
+}
+
+// --- 新增角色 ---
+message CreateRoleReq {
+  string roleName          = 1;
+  string roleKey           = 2;
+  int32  roleSort          = 3;
+  string dataScope         = 4;
+  bool   menuCheckStrictly = 5;
+  bool   deptCheckStrictly = 6;
+  string status            = 7;
+  string remark            = 8;
+}
+message CreateRoleResp {
+  int64 roleId = 1; // 新创建角色的唯一标识
+}
+
+// --- 批量删除角色 (逻辑删除) ---
+message BatchDeleteRoleReq {
+  repeated int64 roleIds = 1; // 批量删除的角色ID列表
+}
+message BatchDeleteRoleResp {}
+
+// --- 修改角色 ---
+message UpdateRoleReq {
+  int64  roleId            = 1;
+  string roleName          = 2;
+  string roleKey           = 3;
+  int32  roleSort          = 4;
+  string dataScope         = 5;
+  bool   menuCheckStrictly = 6;
+  bool   deptCheckStrictly = 7;
+  string status            = 8;
+  string remark            = 9;
+}
+message UpdateRoleResp {}
+
+// --- 根据ID查询角色 ---
+message GetRoleReq {
+  int64 roleId = 1;
+}
+
+// --- 查询角色列表 (分页) ---
+message ListRoleReq {
+  int64  pageNum  = 1; // 页码，默认1
+  int64  pageSize = 2; // 每页数量，默认10
+  string roleName = 3; // 可选：按角色名称模糊搜索
+  string status   = 4; // 可选：按状态筛选
+}
+message ListRoleResp {
+  repeated RoleInfoResp roles = 1;
+  int64 total = 2; // 总记录数
+}
+
+service RoleService {
+  // 1. 新增角色
+  rpc CreateRole(CreateRoleReq) returns (CreateRoleResp);
+
+  // 2. 批量删除角色 (逻辑删除)
+  rpc DeleteRole(BatchDeleteRoleReq) returns (BatchDeleteRoleResp);
+
+  // 3. 修改角色
+  rpc UpdateRole(UpdateRoleReq) returns (UpdateRoleResp);
+
+  // 4. 根据ID查询角色
+  rpc GetRole(GetRoleReq) returns (RoleInfoResp);
+
+  // 5. 查询角色列表 (分页)
+  rpc ListRole(ListRoleReq) returns (ListRoleResp);
+}
